@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试集群2</title>
+    <script>
+        var uid ="张三";
+        var url ="ws://localhost:9876";
+        var ws =new WebSocket(url+"?name="+uid);
+        ws.onopen = function (event) {
+            console.log("opened");
+            ws.send("Hello Tio WebSocket");
+        }
+        ws.onmessage=function (p1) {
+            appendHtml( document.getElementById('container'),'<li>'+p1.data+'</li>');
+        }
+        function send() {
+            ws.send(document.getElementById('txtInput').value);
+        }
+        ws.onclose=function (ev) {
+            console.log(ev);
+            appendHtml(document.getElementById("tips"),'连接已断开！！');
+        }
+
+        function appendHtml(elem,value){
+            var node = document.createElement("div"),
+                fragment = document.createDocumentFragment(),
+                childs = null,
+                i = 0;
+            node.innerHTML = value;
+            childs = node.childNodes;
+            for( ; i < childs.length; i++){
+                fragment.appendChild(childs[i]);
+            }
+            elem.appendChild(fragment);
+            childs = null;
+            fragment = null;
+            node = null;
+        }
+    </script>
+</head>
+<body>
+
+<div>
+    <h2 id="tips"></h2>
+    <ul id="container">
+
+    </ul>
+    <input type="text"  id="txtInput"/>
+    <input type="button" value="发言" onclick="send()">
+</div>
+</body>
+</html>
